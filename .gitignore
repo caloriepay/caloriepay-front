@@ -1,35 +1,40 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
+# node_modules 폴더 제외
 node_modules/
 
-# Expo
+# 로그 파일 제외
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# 환경 변수 파일 제외 (보통 민감한 정보 포함)
+.env
+
+# Expo 관련 파일 제외
 .expo/
+.expo-shared/
+
+# 빌드된 파일 제외
+build/
 dist/
-web-build/
 
-# Native
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
+# iOS 및 Android 관련 디렉토리 제외 (React Native 프로젝트에서)
+android/
+ios/
 
-# Metro
-.metro-health-check*
-
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
-
-# macOS
+# macOS 관련 파일 제외
 .DS_Store
-*.pem
 
-# local env files
-.env*.local
+# VSCode 설정 파일 제외
+.vscode/
 
-# typescript
-*.tsbuildinfo
+# macOS의 Finder에서 생성되는 메타데이터 파일
+.DS_Store
+
+# Windows에서 생성되는 파일
+Thumbs.db
+
+# 이미지 파일 제외 (예시로 PSD 파일)
+*.psd
+
+# 특정 폴더 내의 파일만 무시하기
+project/logs/
