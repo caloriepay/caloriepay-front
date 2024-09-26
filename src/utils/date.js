@@ -13,3 +13,5 @@ export const getStartAndEndOfWeek = () => {
     end: formatDate(end),
   };
 };
+
+export const getCurrentMonth = () => new Date().getMonth() + 1;
