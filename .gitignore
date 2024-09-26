@@ -38,3 +38,5 @@ Thumbs.db
 
 # 특정 폴더 내의 파일만 무시하기
 project/logs/
+
+.yarn/cache
