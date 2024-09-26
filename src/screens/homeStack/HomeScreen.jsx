@@ -3,6 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { BottomModalHeader } from '../../components/units/BottomModalHeader';
 import { calculatePercentage } from '../../utils/calculatePercentage';
+import MainContainer from '../../components/commons/layout/container/MainContainer';
+import WeeklyCalendar from '../../components/units/WeeklyCalendar';
 
 export default function HomeScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,6 +27,9 @@ export default function HomeScreen() {
   return (
     <>
       <MainWrapper>
+        <MainContainer>
+          <WeeklyCalendar />
+        </MainContainer>
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={0}
