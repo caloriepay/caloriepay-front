@@ -21,6 +21,7 @@ import { AuthProvider, useAuth } from '../context/authContext';
 import Title from '../components/commons/text/Title';
 import NavigationHeaderTitle from '../components/commons/text/NavigationHeaderTitle';
 import { LoadingProvider } from '../context/loadingContext';
+import CalendarScreen from '../screens/homeStack/CalendarScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -35,6 +36,7 @@ const HomeStackNavigator = () => {
           headerTitle: () => <Title />,
         }}
       />
+      <Stack.Screen name="Calendar" component={CalendarScreen} />
     </Stack.Navigator>
   );
 };

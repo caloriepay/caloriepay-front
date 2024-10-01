@@ -5,10 +5,11 @@ import { BottomModalHeader } from '../../components/units/BottomModalHeader';
 import { calculatePercentage } from '../../utils/calculatePercentage';
 import MainContainer from '../../components/commons/layout/container/MainContainer';
 import WeeklyCalendar from '../../components/units/WeeklyCalendar';
+import { useMoveToScreen } from '../../components/commons/hooks/useMoveToScreen';
 
 export default function HomeScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const { onPressMoveToPage } = useMoveToScreen();
   useEffect(() => {
     handlePresentModalPress();
   }, []);
@@ -28,7 +29,7 @@ export default function HomeScreen() {
     <>
       <MainWrapper>
         <MainContainer>
-          <WeeklyCalendar />
+          <WeeklyCalendar onPressFooter={() => onPressMoveToPage('Calendar')} />
         </MainContainer>
         <BottomSheetModal
           ref={bottomSheetModalRef}
