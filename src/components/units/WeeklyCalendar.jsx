@@ -56,7 +56,10 @@ export default function WeeklyCalendar({ onPressFooter }) {
         dateNumberStyle={{ color: 'black' }}
       />
       <View style={styles.footerWrapper}>
-        <TouchableOpacity style={styles.footerTextWrapper}>
+        <TouchableOpacity
+          style={styles.footerTextWrapper}
+          onPress={onPressFooter}
+        >
           <Text style={styles.footerText}>전체보기</Text>
           <ChevronRightIcon color="grey" />
         </TouchableOpacity>
