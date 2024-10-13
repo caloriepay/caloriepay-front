@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import {
   HomeIcon,
   ChartBarIcon,
@@ -22,6 +22,8 @@ import Title from '../components/commons/text/Title';
 import NavigationHeaderTitle from '../components/commons/text/NavigationHeaderTitle';
 import { LoadingProvider } from '../context/loadingContext';
 import CalendarScreen from '../screens/homeStack/CalendarScreen';
+import CameraScreen from '../screens/cameraStack/CameraScren';
+import PhotoScreen from '../screens/cameraStack/PhotoScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -156,21 +158,48 @@ const AuthStackNavigator = () => {
   );
 };
 
+const CameraStackNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+      headerShown: false,
+    }}>
+      <Stack.Screen name="Camera" component={CameraScreen} />
+      <Stack.Screen name="Photo" component={PhotoScreen} />
+    </Stack.Navigator>
+  )
+}
+
 const MainNavigation = () => {
   const { isLoggedIn } = useAuth();
 
   return (
-    <NavigationContainer>
+    <>
       {isLoggedIn ? <BottomTabNavigator /> : <AuthStackNavigator />}
-    </NavigationContainer>
+    </>
   );
 };
+
+const RootNavigation = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+      headerShown: false,
+    }}>
+      <Stack.Screen name="main" component={MainNavigation} />
+      <Stack.Screen name="Cam" component={CameraStackNavigator} />
+    </Stack.Navigator>
+  )
+}
 
 export default function AppContainer() {
   return (
     <LoadingProvider>
       <AuthProvider>
-        <MainNavigation />
+        <NavigationContainer>
+        {/* <MainNavigation /> */}
+        <RootNavigation/>
+      </NavigationContainer>
       </AuthProvider>
     </LoadingProvider>
   );

@@ -4,6 +4,7 @@ export default function MainContainer({
   backgroundColor = 'white',
   children,
   hasShadow = true,
+  containerStyle,
 }) {
   return (
     <View
@@ -11,6 +12,7 @@ export default function MainContainer({
         ...styles.mainContainer,
         backgroundColor: backgroundColor,
         ...(hasShadow ? styles.shadow : {}),
+        ...containerStyle,
       }}
     >
       {children}
