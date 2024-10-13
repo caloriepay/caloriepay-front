@@ -6,4 +6,5 @@ export const globalStyles = {
   loginTextColor: '#878787',
   kakaoContainerColor: '#FEE500',
   kakaoIconColor: '#000000',
+  red: '#F55151',
 };
