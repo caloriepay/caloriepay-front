@@ -7,4 +7,6 @@ export const globalStyles = {
   kakaoContainerColor: '#FEE500',
   kakaoIconColor: '#000000',
   red: '#F55151',
+  scoreBackgroundColor: '#4E5566',
+  scoreGrayColor: '#677086',
 };

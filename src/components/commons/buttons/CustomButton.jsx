@@ -18,7 +18,10 @@ export default function CustomButton({
     <Button
       title={title}
       icon={icon}
-      iconContainerStyle={styles.iconContainerStyle}
+      iconContainerStyle={{
+        ...styles.iconContainerStyle,
+        ...iconContainerStyle,
+      }}
       iconPosition={iconPosition}
       titleStyle={{ ...styles.titleStyle, ...titleStyle }}
       buttonStyle={{
