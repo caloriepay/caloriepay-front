@@ -11,10 +11,10 @@ export default function CalendarPost({
   totalEarnKcal,
 }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
-
   const toggleExpanded = () => {
     setIsCollapsed(!isCollapsed);
   };
+  const [activeTab, setActiveTab] = useState('spend');
   return (
     <>
       <TouchableOpacity onPress={toggleExpanded}>
@@ -47,9 +47,27 @@ export default function CalendarPost({
         </Text>
       </View>
       <Collapsible collapsed={isCollapsed}>
-        {selectedDatePosts &&
-        selectedDatePosts.spend &&
-        selectedDatePosts.spend.length > 0 ? (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[
+              styles.tabButton,
+              activeTab === 'spend' && styles.activeButton,
+            ]}
+            onPress={() => setActiveTab('spend')}
+          >
+            <Text style={styles.tabText}>사용</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.tabButton,
+              activeTab === 'earn' && styles.activeButton,
+            ]}
+            onPress={() => setActiveTab('earn')}
+          >
+            <Text style={styles.tabText}>적립</Text>
+          </TouchableOpacity>
+        </View>
+        {activeTab === 'spend' && selectedDatePosts?.spend?.length > 0 ? (
           selectedDatePosts.spend.map((spendItem, index) => (
             <View key={`spend-${index}`} style={styles.postContainer}>
               <Text style={styles.postTitle}>식사 기록</Text>
@@ -62,11 +80,30 @@ export default function CalendarPost({
               ))}
             </View>
           ))
-        ) : (
+        ) : activeTab === 'spend' ? (
           <View style={styles.nullContainer}>
             <Text style={styles.nullTitle}>이용내역이 없습니다.</Text>
           </View>
-        )}
+        ) : null}
+
+        {activeTab === 'earn' && selectedDatePosts?.earn?.length > 0 ? (
+          selectedDatePosts.earn.map((earnItem, index) => (
+            <View key={`earn-${index}`} style={styles.postContainer}>
+              <Text style={styles.postTitle}>운동 기록</Text>
+              {earnItem.data.map((data, idx) => (
+                <View key={`exercise-${idx}`} style={styles.foodItem}>
+                  <Text>
+                    {data.exerciseName} - {data.exerciseKcal} kcal
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ))
+        ) : activeTab === 'earn' ? (
+          <View style={styles.nullContainer}>
+            <Text style={styles.nullTitle}>이용내역이 없습니다.</Text>
+          </View>
+        ) : null}
       </Collapsible>
     </>
   );
@@ -120,5 +157,23 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: globalStyles.mainColor,
     padding: 10,
+  },
+
+  // 버튼
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 10,
+  },
+  tabButton: {
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#ccc',
+  },
+  activeButton: {
+    backgroundColor: '#677086',
+  },
+  tabText: {
+    color: 'white',
   },
 });

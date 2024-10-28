@@ -25,6 +25,7 @@ import CalendarScreen from '../screens/homeStack/CalendarScreen';
 import CameraScreen from '../screens/cameraStack/CameraScren';
 import PhotoScreen from '../screens/cameraStack/PhotoScreen';
 import { getAccessToken } from '../utils/jwt/tokenUtils';
+import ExerciseScreen from '../screens/homeStack/ExerciseScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -40,6 +41,7 @@ const HomeStackNavigator = () => {
         }}
       />
       <Stack.Screen name="Calendar" component={CalendarScreen} />
+      <Stack.Screen name="Exercise" component={ExerciseScreen} />
     </Stack.Navigator>
   );
 };

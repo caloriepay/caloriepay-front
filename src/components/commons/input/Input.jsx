@@ -12,6 +12,7 @@ export default function CustomInput({
   value,
   secureTextEntry,
   leftIcon,
+  keyboardType,
 }) {
   return (
     <View style={styles.container}>
@@ -27,6 +28,7 @@ export default function CustomInput({
         value={value}
         secureTextEntry={secureTextEntry}
         leftIcon={leftIcon}
+        keyboardType={keyboardType}
       />
     </View>
   );
