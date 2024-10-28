@@ -92,6 +92,7 @@ export default function HomeScreen() {
             color={globalStyles.mainColor}
             text="적립하기"
             icon={true}
+            onPress={() => onPressMoveToPage('Exercise')}
           />
         </View>
         <BottomSheetModal
