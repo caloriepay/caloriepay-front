@@ -1,37 +1,68 @@
-import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { saveTokens } from '../utils/jwt/tokenUtils';
+import apiClient from './apiInterceptor';
 
-const BASE_URL = 'base_url';
-// const navigation = useNavigation();
-
-export const checkUser = async (userData) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/register`, userData);
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Registration failed');
-  }
-};
+const BASE_URL = 'http://192.168.0.239:8080';
 
 export const loginUser = async (userData) => {
   try {
-    const response = await axios.post(`${BASE_URL}/login`, userData);
+    const response = await axios.post(`${BASE_URL}/api/auth/login`, userData);
     if (response.status === 200) {
-      response.headers['AccessToken'];
-      response.headers['AccessToken'];
+      console.log(response.data);
+      const { accessToken, refreshToken } = response.data.data;
+      await saveTokens(accessToken, refreshToken);
+      return true;
     }
   } catch (error) {
     console.log(error.message);
   }
 };
 
-export const joinUser = async (userData) => {
+export const joinUser = async (userData, setError) => {
   console.log('joinUser');
+  try {
+    const response = await axios.post(`${BASE_URL}/api/members/join`, userData);
+    loginUser(userData);
+    return true;
+  } catch (error) {
+    const status = error.response?.status;
+    const code = error.response?.data.data;
+    const message = error.response?.data.message || '정의되지 않은 오류';
+    console.log(code);
+    console.log(status);
+    console.log(message);
+    if (status === 400) {
+      switch (code) {
+        case 'ERROR-BR-003':
+          setError('email', { message });
+          return false;
+        case 'ERROR-BR-004':
+          setError('nickname', { message });
+          return false;
+        case 'ERROR-BR-005':
+          setError('phoneNumber', { message });
+          return false;
+      }
+    }
+    return false;
+  }
+};
+
+export const registerMemberProfile = async (userData) => {
+  console.log('registerMemberProfile');
   console.log(userData);
-  const { email, password } = userData;
-  const loginData = { email, password };
-  // try {
-  //   await axios.post(`${BASE_URL}/api/users/join`, userData);
-  //   // 로그인 API 재요청
-  // } catch (error) {}
+  try {
+    const response = await apiClient.post(
+      `${BASE_URL}/api/members/profile`,
+      userData,
+    );
+    console.log('회원가입 완료:', response.data);
+    return true;
+  } catch (error) {
+    const status = error.response?.status;
+    const code = error.response?.data?.code;
+    console.log(status);
+    console.log(code);
+    console.log(error);
+  }
 };

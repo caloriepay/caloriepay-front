@@ -6,18 +6,18 @@ import {
   saveTokens,
   removeTokens,
 } from '../utils/jwt/tokenUtils';
-import { useNavigation } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
 
-const navigation = useNavigation();
+// const navigation = useNavigation();
 
 const apiClient = axios.create({
-  baseURL: 'https://api.example.com',
+  baseURL: 'http://192.168.0.2:8080',
 });
 
 apiClient.interceptors.request.use(async (config) => {
   const token = await getAccessToken();
   if (token) {
-    config.headers['Access-Token'] = token;
+    config.headers['Authorization'] = `Bearer ${token}`;
   }
   return config;
 });
@@ -45,10 +45,11 @@ apiClient.interceptors.response.use(
         } else if (response.status === 404) {
           // refresh 토큰 만료
           await removeTokens();
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'initial' }],
-          });
+          // navigation.reset({
+          //   index: 0,
+          //   routes: [{ name: 'initial' }],
+          // });
+          console.log('refresh 토큰 만료');
         } else {
           console.log('hi');
         }

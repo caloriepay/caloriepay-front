@@ -1,4 +1,4 @@
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { userPersonalSchema } from '../../../components/commons/input/validation';
@@ -11,6 +11,8 @@ import {
   LockClosedIcon,
   DevicePhoneMobileIcon,
 } from 'react-native-heroicons/outline';
+import { UserIcon as NicknameIcon } from 'react-native-heroicons/solid';
+import { joinUser } from '../../../api/userApi';
 
 export default function SignUpPersonInfoScreen() {
   const navigation = useNavigation();
@@ -24,21 +26,14 @@ export default function SignUpPersonInfoScreen() {
     mode: 'onSubmit',
   });
   const onSubmit = async (data) => {
-    const { email, name, phoneNumber } = data;
-    const validationData = { email, name, phoneNumber };
     const { confirmPassword, ...personalData } = data;
-    console.log(data);
-    console.log(validationData);
-    // checkUser api 호출
-    // src/utils/handleApiErrors.js 로 에러 핸들링
-    // useForm의 setError 메서드를 props로 보내서 백엔드 에러메시지 핸들링
-
-    navigation.navigate('signUpPhysicalInfo', {
-      personalData,
-    });
+    const isJoinSuccessful = await joinUser(personalData, setError);
+    if (isJoinSuccessful) {
+      navigation.navigate('signUpPhysicalInfo', {
+        personalData,
+      });
+    }
   };
-  console.log('===========');
-  console.log(errors);
 
   return (
     <SignUpWrapper
@@ -53,6 +48,14 @@ export default function SignUpPersonInfoScreen() {
         placeholder="이름을 입력해주세요"
         errors={errors}
         leftIcon={<UserIcon color="gray" />}
+      />
+      <InputField
+        control={control}
+        name="nickname"
+        title="닉네임"
+        placeholder="닉네임을 입력해주세요"
+        errors={errors}
+        leftIcon={<NicknameIcon color="gray" />}
       />
       <InputField
         control={control}
