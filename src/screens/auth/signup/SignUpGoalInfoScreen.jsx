@@ -1,4 +1,4 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import { Text, View } from 'react-native';
 import SignUpWrapper from '../../../components/commons/layout/wrapper/SignupWrapper';
 import CustomButtonGroup from '../../../components/commons/buttons/CustomButtonGroup';
@@ -9,12 +9,11 @@ import { userGoalSchema } from '../../../components/commons/input/validation';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useAuth } from '../../../context/authContext';
-import { joinUser } from '../../../api/userApi';
+import { registerMemberProfile } from '../../../api/userApi';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default function SignUpGoalInfoScreen() {
-  const navigation = useNavigation();
   const route = useRoute();
   const [goal, setGoal] = useState(0);
   const [activityLevel, setActivityLevel] = useState(0);
@@ -28,13 +27,34 @@ export default function SignUpGoalInfoScreen() {
     resolver: yupResolver(userGoalSchema),
     mode: 'onSubmit',
   });
-  const onSubmit = () => {
-    console.log(goal, activityLevel);
-    const userData = { ...updatedData, goal, activityLevel };
+  const onSubmit = (data) => {
+    console.log(data);
+    console.log('바뀌기 전 goal, activityLevel : ', goal, activityLevel);
+    const goalText = goal === 0 ? 'DIET' : 'MAINTAIN';
+    const activityLevelText =
+      activityLevel === 0
+        ? 'HIGH'
+        : activityLevel === 1
+          ? 'NORMAL'
+          : activityLevel === 2
+            ? 'LOW'
+            : 'NONE';
+
+    console.log(
+      '바뀌고 난 후 goal, activityLevel : ',
+      goalText,
+      activityLevelText,
+    );
+    const userData = {
+      ...data,
+      ...updatedData,
+      goal: goalText,
+      activityLevel: activityLevelText,
+    };
     console.log(userData);
-    // 회원가입 API 요청
-    joinUser(userData);
-    logIn();
+    if (registerMemberProfile(userData)) {
+      logIn();
+    }
   };
   return (
     <View style={{ height: '100%', paddingBottom: 30 }}>

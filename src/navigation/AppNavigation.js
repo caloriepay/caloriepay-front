@@ -24,6 +24,7 @@ import { LoadingProvider } from '../context/loadingContext';
 import CalendarScreen from '../screens/homeStack/CalendarScreen';
 import CameraScreen from '../screens/cameraStack/CameraScren';
 import PhotoScreen from '../screens/cameraStack/PhotoScreen';
+import { getAccessToken } from '../utils/jwt/tokenUtils';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -162,44 +163,42 @@ const CameraStackNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-      headerShown: false,
-    }}>
+        headerShown: false,
+      }}
+    >
       <Stack.Screen name="Camera" component={CameraScreen} />
       <Stack.Screen name="Photo" component={PhotoScreen} />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
 const MainNavigation = () => {
   const { isLoggedIn } = useAuth();
 
-  return (
-    <>
-      {isLoggedIn ? <BottomTabNavigator /> : <AuthStackNavigator />}
-    </>
-  );
+  return <>{isLoggedIn ? <BottomTabNavigator /> : <AuthStackNavigator />}</>;
 };
 
 const RootNavigation = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-      headerShown: false,
-    }}>
+        headerShown: false,
+      }}
+    >
       <Stack.Screen name="main" component={MainNavigation} />
       <Stack.Screen name="Cam" component={CameraStackNavigator} />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
 export default function AppContainer() {
   return (
     <LoadingProvider>
       <AuthProvider>
         <NavigationContainer>
-        {/* <MainNavigation /> */}
-        <RootNavigation/>
-      </NavigationContainer>
+          {/* <MainNavigation /> */}
+          <RootNavigation />
+        </NavigationContainer>
       </AuthProvider>
     </LoadingProvider>
   );
