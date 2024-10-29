@@ -1,10 +1,13 @@
-import axios from 'axios';
+import apiClient from './apiInterceptor';
+import Constants from 'expo-constants';
 
-const BASE_URL = 'base_url';
+const { manifest2 } = Constants;
+const BASE_URL = `http://${manifest2.extra.expoClient.hostUri.split(':')[0]}:8080`;
 
 export const getCalorieAndScore = async () => {
   try {
-    // const response = await axios.get(`${BASE_URL}/api/kcal`);
+    // const response = await apiClient.get(`${BASE_URL}/api/kcal`);
+    // console.log(response.data);
     const fakeResponse = await new Promise((resolve) => {
       setTimeout(() => {
         resolve({

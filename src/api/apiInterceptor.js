@@ -6,12 +6,12 @@ import {
   saveTokens,
   removeTokens,
 } from '../utils/jwt/tokenUtils';
-// import { useNavigation } from '@react-navigation/native';
+import Constants from 'expo-constants';
 
-// const navigation = useNavigation();
+const { manifest2 } = Constants;
 
 const apiClient = axios.create({
-  baseURL: 'http://192.168.0.2:8080',
+  baseURL: `http://${manifest2.extra.expoClient.hostUri.split(':')[0]}:8080`,
 });
 
 apiClient.interceptors.request.use(async (config) => {

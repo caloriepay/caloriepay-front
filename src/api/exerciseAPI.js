@@ -12,18 +12,19 @@ export const getExerciseData = async () => {
     console.log(JSON.stringify(response.data, null, 2));
     return response.data;
   } catch (error) {
-    const status = error.response?.status;
-    const code = error.response?.data.data;
-    const message = error.response?.data.message || '정의되지 않은 오류';
-    console.log(code);
-    console.log(status);
-    console.log(message);
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.message || '정의되지 않은 오류';
+      console.log(`Error ${status}: ${message}`);
+      return { error: true, status, message };
+    } else {
+      console.log('Network error or server is unreachable');
+      return false;
+    }
   }
 };
 
 export const earnKcalByExercise = async (data) => {
-  console.log('earnKcalByExercise');
-  console.log(data);
   const title = data[0].title;
   const exercise = data.map((item) => ({
     exerciseName: item.selectedItem.label,
@@ -33,6 +34,7 @@ export const earnKcalByExercise = async (data) => {
     title,
     exercise,
   };
+  console.log(JSON.stringify(body, null, 2));
   try {
     const response = await apiClient.post(
       `${BASE_URL}/api/exercise/record`,

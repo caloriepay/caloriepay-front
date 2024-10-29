@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Alert } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { getExerciseData } from '../../api/exerciseAPI';
 import { globalStyles } from '../../styles/globalStyles';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CustomDropdown({ value, onChange }) {
   const [isFocus, setIsFocus] = useState(false);
   const [exerciseData, setExerciseData] = useState([]);
-
+  const navigation = useNavigation();
   useEffect(() => {
     const fetchData = async () => {
       const response = await getExerciseData();
+      if (!response) {
+        navigation.goBack();
+        Alert.alert(
+          '서버 불안정',
+          '서버가 불안정하여 데이터를 로드할 수 없습니다.',
+        );
+      }
       const formattedList = response.data.map((item) => ({
         label: item.name,
         value: item.id,

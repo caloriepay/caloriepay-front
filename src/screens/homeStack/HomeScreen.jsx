@@ -14,6 +14,14 @@ import { getCalorieAndScore } from '../../api/calorieScoreAPI';
 import { useLoading } from '../../context/loadingContext';
 import CustomButton from '../../components/commons/buttons/CustomButton';
 import CalorieScoreSection from '../../components/units/CalorieScoreSection';
+import { dateToMmDd } from '../../utils/date';
+import { getKcalDataByDate } from '../../api/calendarAPI';
+import {
+  calculateTotalEarnKcal,
+  calculateTotalSpendKcal,
+} from '../../utils/totalKcal';
+import CaloriePostHeader from '../../components/commons/caloriePost/CaloriePostHeader';
+import CaloriePostDetail from '../../components/commons/caloriePost/CaloriePostDetail';
 
 export default function HomeScreen() {
   const { onPressMoveToPage } = useMoveToScreen();
@@ -25,10 +33,20 @@ export default function HomeScreen() {
   const [calorieScore, setCalorieScore] = useState();
   const [tier, setTier] = useState();
 
+  const [todayPost, setTodayPost] = useState();
+  const [totalSpendKcal, setTotalSpendKcal] = useState();
+  const [totalEarnKcal, setTotalEarnKcal] = useState();
+
+  const today = new Date();
+  const formatDate = today.toLocaleDateString('en-CA');
   const fetchHomeData = async () => {
     showLoading();
     try {
       const calorieResponse = await getCalorieAndScore();
+      const todayPostData = await getKcalDataByDate(formatDate);
+      setTodayPost(todayPostData);
+      setTotalEarnKcal(calculateTotalEarnKcal(todayPostData.exerciseRecords));
+      // setTotalSpendKcal(calculateTotalSpendKcal(todayPostData.spend));
       console.log('calorieResponse : ', calorieResponse);
       setUsername(calorieResponse.name);
       setRecommendCal(calorieResponse.recommendKcal);
@@ -102,7 +120,19 @@ export default function HomeScreen() {
           onChange={handleSheetChanges}
           enablePanDownToClose={false}
           handleComponent={() => BottomModalHeader(isModalOpen)}
-        ></BottomSheetModal>
+        >
+          <MainContainer>
+            {todayPost && (
+              <CaloriePostHeader
+                totalEarnKcal={totalEarnKcal}
+                today={dateToMmDd(formatDate)}
+              />
+            )}
+          </MainContainer>
+          <MainContainer>
+            <CaloriePostDetail caloriePostData={todayPost} />
+          </MainContainer>
+        </BottomSheetModal>
       </MainWrapper>
     </>
   );
