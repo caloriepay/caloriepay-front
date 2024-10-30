@@ -76,3 +76,42 @@ export const registerMemberProfile = async (userData) => {
     console.log(error);
   }
 };
+
+export const getUserInfo = async () => {
+  console.log('getUserInfo');
+  try {
+    const response = await apiClient.get(`${BASE_URL}/api/members`);
+    console.log(JSON.stringify(response.data, null, 2));
+    return response.data.data;
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.message || '정의되지 않은 오류';
+      console.log(`Error ${status}: ${message}`);
+      return { error: true, status, message };
+    } else {
+      console.log('Network error or server is unreachable');
+      return false;
+    }
+  }
+};
+
+export const editUserInfo = async (data) => {
+  console.log('editUserInfo');
+  console.log(JSON.stringify(data, null, 2));
+  try {
+    const response = await apiClient.patch(`${BASE_URL}/api/members`, data);
+    console.log(JSON.stringify(response.data, null, 2));
+    return { success: true, data: response.data };
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.message || '정의되지 않은 오류';
+      console.log(`Error ${status}: ${message}`);
+      return { error: true, status, message };
+    } else {
+      console.log('Network error or server is unreachable');
+      return false;
+    }
+  }
+};
