@@ -12,8 +12,19 @@ export default function WeeklyCalendar({ onPressFooter }) {
   const [events, setEvents] = useState([]);
   const fetchData = async () => {
     const date = getStartAndEndOfWeek();
-    const data = await getTierByDate(date);
-    setEvents(data);
+    const responseData = await getTierByDate(date);
+    const formattedData = responseData.map((item) => {
+      const [year, month, day] = item.date;
+      const formattedDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+      return {
+        id: item.id,
+        userId: item.userId,
+        date: formattedDate,
+        tier: item.tier,
+      };
+    });
+    setEvents(formattedData);
   };
   useEffect(() => {
     fetchData();

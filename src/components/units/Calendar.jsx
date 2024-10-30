@@ -6,14 +6,18 @@ import { getStartAndEndOfMonth } from '../../utils/date';
 import { tierColors } from '../../utils/tierColors';
 import MainContainer from '../commons/layout/container/MainContainer';
 import CalendarPost from './CalendarPost';
-import { getKcalDataByDate } from '../../api/calendarAPI';
+import { getKcalDataByDate, getTierByDate } from '../../api/calendarAPI';
 import {
   calculateTotalSpendKcal,
   calculateTotalEarnKcal,
 } from '../../utils/totalKcal';
+import { dateToMmDd } from '../../utils/date';
+import { useLoading } from '../../context/loadingContext';
 
 export default function MainCalendar() {
+  const { showLoading, hideLoading } = useLoading();
   const [tiers, setTiers] = useState([]);
+  const [today, setToday] = useState();
   const [selectedDatePosts, setSelectedDatePosts] = useState();
   const [totalSpendKcal, setTotalSpendKcal] = useState();
   const [totalEarnKcal, setTotalEarnKcal] = useState();
@@ -21,35 +25,19 @@ export default function MainCalendar() {
   const fetchTierData = async (start, end) => {
     try {
       const dateRange = { start, end };
-      console.log(dateRange);
+      const responseData = await getTierByDate(dateRange);
+      const formattedData = responseData.map((item) => {
+        const [year, month, day] = item.date;
+        const formattedDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-      const data = [
-        {
-          id: 1,
-          memberId: 1,
-          date: '2024-09-02',
-          tier: 'A',
-        },
-        {
-          id: 2,
-          memberId: 1,
-          date: '2024-09-12',
-          tier: 'C',
-        },
-        {
-          id: 3,
-          memberId: 1,
-          date: '2024-09-22',
-          tier: 'S',
-        },
-        {
-          id: 4,
-          memberId: 1,
-          date: '2024-10-17',
-          tier: 'B',
-        },
-      ];
-      setTiers(data);
+        return {
+          id: item.id,
+          userId: item.userId,
+          date: formattedDate,
+          tier: item.tier,
+        };
+      });
+      setTiers(formattedData);
     } catch (error) {
       console.error('ERROR FETCHING TIERS');
     }
@@ -58,8 +46,8 @@ export default function MainCalendar() {
   const fetchDataForSelectedDate = async (date) => {
     const data = await getKcalDataByDate(date);
     setSelectedDatePosts(data);
+    setTotalEarnKcal(calculateTotalEarnKcal(data.exerciseRecords));
     setTotalSpendKcal(calculateTotalSpendKcal(data.spend));
-    setTotalEarnKcal(calculateTotalEarnKcal(data.earn));
   };
 
   useEffect(() => {
@@ -69,7 +57,8 @@ export default function MainCalendar() {
       currentDate.getMonth(),
     );
     fetchTierData(start, end);
-    fetchDataForSelectedDate(currentDate);
+    setToday(dateToMmDd(currentDate));
+    fetchDataForSelectedDate(currentDate.toLocaleDateString('en-CA'));
   }, []);
 
   const handleMonthChange = (month) => {
@@ -116,6 +105,7 @@ export default function MainCalendar() {
           onDayPress={(day) => {
             setSelectedDate(day.dateString);
             fetchDataForSelectedDate(day.dateString);
+            setToday(dateToMmDd(day.dateString));
           }}
           onMonthChange={handleMonthChange}
         />
@@ -125,6 +115,7 @@ export default function MainCalendar() {
           selectedDatePosts={selectedDatePosts}
           totalSpendKcal={totalSpendKcal}
           totalEarnKcal={totalEarnKcal}
+          today={today}
         />
       </MainContainer>
     </>
