@@ -3,6 +3,7 @@ import { View, Image, StyleSheet, Button, Text } from 'react-native';
 import BackButton from '../../components/commons/buttons/BackButton';
 import { useMoveToScreen } from '../../components/commons/hooks/useMoveToScreen';
 import { useLoading } from '../../context/loadingContext';
+import { getObjectRecognitionResult } from '../../api/foodAPI';
 
 export default function PhotoScreen({ route, navigation }) {
   const { photoUri } = route.params;
@@ -26,14 +27,8 @@ export default function PhotoScreen({ route, navigation }) {
   const fetchData = async () => {
     showLoading();
     try {
-      console.log(photoUri);
-      // const ingredients = await getIngredients(photoUri);
-      // const recipes = await getRecipeFromIngredients(ingredients);
-      const data = {
-        recipes,
-        ingredients,
-      };
-      onPressMoveToPage('SearchResult', data);
+      const response = await getObjectRecognitionResult(photoUri);
+      onPressMoveToPage('Food', { response, photoUri });
     } catch (error) {
       console.log(error);
     } finally {
