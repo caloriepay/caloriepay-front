@@ -16,7 +16,15 @@ export const loginUser = async (userData) => {
       return true;
     }
   } catch (error) {
-    console.log(error.message);
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.message || '정의되지 않은 오류';
+      console.log(`Error ${status}: ${message}`);
+      return { error: true, status, message };
+    } else {
+      console.log('Network error or server is unreachable');
+      return false;
+    }
   }
 };
 

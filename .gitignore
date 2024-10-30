@@ -40,3 +40,5 @@ Thumbs.db
 project/logs/
 
 .yarn/cache
+
+.yarn/install-state.gz
