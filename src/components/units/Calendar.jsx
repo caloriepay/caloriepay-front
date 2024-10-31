@@ -47,7 +47,7 @@ export default function MainCalendar() {
     const data = await getKcalDataByDate(date);
     setSelectedDatePosts(data);
     setTotalEarnKcal(calculateTotalEarnKcal(data.exerciseRecords));
-    setTotalSpendKcal(calculateTotalSpendKcal(data.spend));
+    setTotalSpendKcal(calculateTotalSpendKcal(data.mealRecords));
   };
 
   useEffect(() => {
