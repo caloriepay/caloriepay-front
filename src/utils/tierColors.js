@@ -4,4 +4,5 @@ export const tierColors = {
   B: '#FFC700',
   C: '#FF8A00',
   D: '#F55151',
+  None: '#979797',
 };

@@ -1,4 +1,4 @@
-import { startOfWeek, endOfWeek, format } from 'date-fns';
+import { startOfWeek, endOfWeek, format, getYear, getMonth } from 'date-fns';
 
 export const getStartAndEndOfWeek = () => {
   const now = new Date();
@@ -22,6 +22,7 @@ export const getStartAndEndOfMonth = (year, month) => {
 };
 
 export const getCurrentMonth = () => new Date().getMonth() + 1;
+export const getCurrentYear = () => new Date().getFullYear();
 
 export const dateToMmDd = (date) => {
   const targetDate = date ? new Date(date) : new Date();
@@ -32,5 +33,3 @@ export const dateToMmDd = (date) => {
   const MmDd = `${month}월 ${day}일(${dayOfWeek})`;
   return MmDd;
 };
-
-export const listDateToYyMmDd = (data) => {};

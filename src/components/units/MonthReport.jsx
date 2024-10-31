@@ -1,20 +1,20 @@
 import MainContainer from '../commons/layout/container/MainContainer';
 import CalorieTier from '../commons/tier/CalorieTier';
 import { getMonth, getYear, addMonths, subMonths } from 'date-fns';
-
 import { View, Text, StyleSheet } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { useState } from 'react';
 import { Button } from '@rneui/base';
+import { getMonthTier, getMonthTierAmount } from '../../api/tierAPI';
+import { useEffect } from 'react';
 
-export default function MonthReport({
-  tier,
-  calorieScore,
-}) {
+export default function MonthReport({ calorieScore }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [tier, setTier] = useState();
+  const [tierCount, setTierCount] = useState({ S: 0, A: 0, B: 0, C: 0, D: 0 });
 
   const year = getYear(selectedDate);
-  const month = getMonth(selectedDate) + 1; // 월이 0부터 시작하므로 1 더해줌
+  const month = getMonth(selectedDate) + 1;
 
   const handlePrevMonth = () => {
     setSelectedDate(subMonths(selectedDate, 1));
@@ -23,74 +23,75 @@ export default function MonthReport({
   const handleNextMonth = () => {
     setSelectedDate(addMonths(selectedDate, 1));
   };
-
+  const fetchTierData = async (date) => {
+    const year = getYear(date);
+    const month = getMonth(date) + 1;
+    const monthTierData = await getMonthTier(year, month);
+    setTier(monthTierData?.tier);
+    const response = await getMonthTierAmount(year, month);
+    const tierAmounts = { S: 0, A: 0, B: 0, C: 0, D: 0 };
+    if (response) {
+      response.forEach((item) => {
+        tierAmounts[item.tier] = item.amount;
+      });
+    }
+    setTierCount(tierAmounts);
+  };
+  useEffect(() => {
+    fetchTierData(selectedDate);
+  }, [selectedDate]);
 
   return (
     <MainContainer>
       <View style={styles.dateContainer}>
         <Button onPress={handlePrevMonth} buttonStyle={styles.arrowButton}>
-          <Text style={styles.arrowText}>{"<"}</Text>
+          <Text style={styles.arrowText}>{'<'}</Text>
         </Button>
-        <Text style={styles.dateText}>{year}년 {month}월</Text>
-        <Button onPress={handleNextMonth} buttonStyle={styles.arrowButton}>
-          <Text style={styles.arrowText}>{">"}</Text>
-        </Button>
-      </View>
-
-      <Text style={styles.monthQuestionText}>
-        {month}월 나의 건강티어는?
-      </Text>
-
-      {/* 메인 티어 표시 */}
-      <View style={styles.centeredContent}>
-        <CalorieTier tier={tier} style={styles.mainTierStyle} />
-        <Text style={styles.mainTierText}>
-          {tier} 등급
+        <Text style={styles.dateText}>
+          {year}년 {month}월
         </Text>
+        <Button onPress={handleNextMonth} buttonStyle={styles.arrowButton}>
+          <Text style={styles.arrowText}>{'>'}</Text>
+        </Button>
       </View>
 
-      {/* 하위 티어 표시 */}
-      <View style={styles.tierRow}>
-        <View style={styles.tierItem}>
-          <CalorieTier tier={tier} style={styles.smallTierStyle} />
-          <Text style={styles.tierLabel}>S</Text>
-        </View>
-        <View style={styles.tierItem}>
-          <CalorieTier tier={tier} style={styles.smallTierStyle} />
-          <Text style={styles.tierLabel}>A</Text>
-        </View>
-        <View style={styles.tierItem}>
-          <CalorieTier tier={tier} style={styles.smallTierStyle} />
-          <Text style={styles.tierLabel}>B</Text>
-        </View>
-        <View style={styles.tierItem}>
-          <CalorieTier tier={tier} style={styles.smallTierStyle} />
-          <Text style={styles.tierLabel}>C</Text>
-        </View>
-        <View style={styles.tierItem}>
-          <CalorieTier tier={tier} style={styles.smallTierStyle} />
-          <Text style={styles.tierLabel}>D</Text>
-        </View>
+      <Text style={styles.monthQuestionText}>{month}월 나의 건강티어는?</Text>
+
+      <View style={styles.centeredContent}>
+        <CalorieTier tier={tier} containerStyle={{ width: 86, height: 119 }} />
+        <Text style={styles.mainTierText}>{tier} 등급</Text>
       </View>
-      
+      <View style={styles.tierRow}>
+        {['S', 'A', 'B', 'C', 'D'].map((tier) => (
+          <View key={tier} style={styles.tierItem}>
+            <CalorieTier
+              isCount={true}
+              count={tierCount[tier]}
+              tier={tier}
+              containerStyle={styles.smallTierStyle}
+            />
+            <Text style={styles.tierLabel}>{tier}</Text>
+          </View>
+        ))}
+      </View>
+
       <MainContainer
         backgroundColor={globalStyles.scoreBackgroundColor}
         hasShadow={false}
       >
-        <Text style={styles.calorieScoreStyle}>  
-          {month}월 최고 Calorie Score  |  {calorieScore}점
+        <Text style={styles.calorieScoreStyle}>
+          {month}월 최고 Calorie Score | {calorieScore}점
         </Text>
-        
       </MainContainer>
 
-      <Text style={styles.mentStyle}>
-        하루하루 성실한 식단기록과 운동은{"\n"}
-        건강 티어를 올리고{"\n"}
-        Calorie Score를 높이는데 도움이 되요!{"\n"}
+      <Text style={styles.commentStyle}>
+        하루하루 성실한 식단기록과 운동은{'\n'}
+        건강 티어를 올리고{'\n'}
+        Calorie Score를 높이는데 도움이 되요!{'\n'}
       </Text>
     </MainContainer>
   );
-};
+}
 
 const styles = StyleSheet.create({
   dateContainer: {
@@ -98,19 +99,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 10,
-
   },
-  arrowButton:{
-    backgroundColor: '#d3d3d3', 
-    borderRadius: 25, 
-    width: 40,        
-    height: 40,  
+  arrowButton: {
+    backgroundColor: '#d3d3d3',
+    borderRadius: 25,
+    width: 40,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },
   arrowText: {
     fontSize: 20,
-
   },
   dateText: {
     fontSize: 18,
@@ -130,7 +129,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   mainTierStyle: {
-    fontSize: 30, 
+    fontSize: 30,
   },
   mainTierText: {
     fontSize: 24,
@@ -156,16 +155,15 @@ const styles = StyleSheet.create({
   calorieScoreStyle: {
     fontSize: 15,
     textAlign: 'center',
-    justifyContent:'space-around',
-    color: "white",
-
+    justifyContent: 'space-around',
+    color: 'white',
   },
-  mentStyle: {
+  commentStyle: {
     marginTop: 20,
     marginBottom: 40,
     fontSize: 16,
     textAlign: 'center',
     color: 'gray',
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
   },
 });

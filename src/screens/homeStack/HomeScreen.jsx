@@ -23,9 +23,8 @@ import {
 import CaloriePostHeader from '../../components/commons/caloriePost/CaloriePostHeader';
 import CaloriePostDetail from '../../components/commons/caloriePost/CaloriePostDetail';
 
-
 import MonthReport from '../../components/units/MonthReport';
-
+import { getMonthTier } from '../../api/tierAPI';
 
 export default function HomeScreen() {
   const { onPressMoveToPage } = useMoveToScreen();
@@ -43,11 +42,17 @@ export default function HomeScreen() {
 
   const today = new Date();
   const formatDate = today.toLocaleDateString('en-CA');
+
   const fetchHomeData = async () => {
     showLoading();
     try {
+      const tierData = await getMonthTier(
+        formatDate.split('-')[0],
+        parseInt(formatDate.split('-')[1]) - 1,
+      );
       const calorieResponse = await getCalorieAndScore();
       const todayPostData = await getKcalDataByDate(formatDate);
+      setTier(tierData?.tier);
       setTodayPost(todayPostData);
       setTotalEarnKcal(calculateTotalEarnKcal(todayPostData.exerciseRecords));
       setTotalSpendKcal(calculateTotalSpendKcal(todayPostData.mealRecords));
@@ -97,10 +102,6 @@ export default function HomeScreen() {
             recommendCal={recommendCal}
           />
         </MainContainer>
-        <CustomButton
-          title="메뉴 추천받기 >"
-          containerStyle={{ marginBottom: 0 }}
-        />
         <MainContainer containerStyle={{ marginBottom: 0 }}>
           <WeeklyCalendar onPressFooter={() => onPressMoveToPage('Calendar')} />
         </MainContainer>
@@ -151,7 +152,6 @@ export default function HomeScreen() {
           </BottomSheetScrollView>
         </BottomSheetModal>
       </MainWrapper>
-
     </>
   );
 }
