@@ -23,6 +23,10 @@ import {
 import CaloriePostHeader from '../../components/commons/caloriePost/CaloriePostHeader';
 import CaloriePostDetail from '../../components/commons/caloriePost/CaloriePostDetail';
 
+
+import MonthReport from '../../components/units/MonthReport';
+
+
 export default function HomeScreen() {
   const { onPressMoveToPage } = useMoveToScreen();
   const { showLoading, hideLoading } = useLoading();
@@ -134,6 +138,7 @@ export default function HomeScreen() {
           </MainContainer>
         </BottomSheetModal>
       </MainWrapper>
+
     </>
   );
 }
