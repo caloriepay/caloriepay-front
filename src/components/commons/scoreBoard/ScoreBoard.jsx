@@ -9,6 +9,7 @@ export default function ScoreBoard({
   calorieScore,
   isDarkMode,
   onPress,
+  tier,
 }) {
   return (
     <MainContainer
@@ -30,7 +31,10 @@ export default function ScoreBoard({
         ) : (
           <>
             <Text style={styles.calorieScoreTitle}> | </Text>
-            <CalorieTier containerStyle={{ width: 18, height: 24 }} />
+            <CalorieTier
+              tier={tier}
+              containerStyle={{ width: 18, height: 24 }}
+            />
             <Text style={{ fontWeight: 'bold' }}> 등급</Text>
           </>
         )}

@@ -40,7 +40,8 @@ export default function CalorieScoreSection({
       <ScoreBoard
         title="지난달 건강티어"
         calorieScore={calorieScore}
-        onPress={() => onPressMoveToPage('TierReport')}
+        tier={tier}
+        onPress={() => onPressMoveToPage('TierReport', { calorieScore })}
       />
     </>
   );
