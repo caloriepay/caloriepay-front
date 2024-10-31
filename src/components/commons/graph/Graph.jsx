@@ -13,7 +13,7 @@ export default function Graph({ data, isWeight }) {
     },
     formatYLabel: (value) => {
       const numericValue = parseFloat(value);
-      return data.legend[0] === '체중 변화'
+      return data?.legend[0] === '체중 변화'
         ? numericValue.toFixed(1)
         : Math.round(numericValue).toString();
     },
@@ -29,7 +29,7 @@ export default function Graph({ data, isWeight }) {
         data={data}
         width={330}
         height={200}
-        yAxisSuffix={data.legend[0] === '체중 변화' ? 'kg' : ''}
+        yAxisSuffix={data?.legend[0] === '체중 변화' ? 'kg' : ''}
         chartConfig={chartConfig}
         // bezier
         style={{
