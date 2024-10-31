@@ -46,12 +46,12 @@ export default function HomeScreen() {
       const todayPostData = await getKcalDataByDate(formatDate);
       setTodayPost(todayPostData);
       setTotalEarnKcal(calculateTotalEarnKcal(todayPostData.exerciseRecords));
-      // setTotalSpendKcal(calculateTotalSpendKcal(todayPostData.spend));
+      setTotalSpendKcal(calculateTotalSpendKcal(todayPostData.mealRecords));
       console.log('calorieResponse : ', calorieResponse);
-      setUsername(calorieResponse.name);
-      setRecommendCal(calorieResponse.recommendKcal);
-      setRemainedCal(calorieResponse.remainKcal);
-      setCalorieScore(calorieResponse.score);
+      setUsername(calorieResponse?.name);
+      setRecommendCal(parseInt(calorieResponse?.dailyRecommendedCalorie));
+      setRemainedCal(parseInt(calorieResponse?.remainCalorie));
+      setCalorieScore(calorieResponse?.score);
     } catch (err) {
       console.log(err);
     } finally {
@@ -122,15 +122,26 @@ export default function HomeScreen() {
           handleComponent={() => BottomModalHeader(isModalOpen)}
         >
           <BottomSheetScrollView style={{ marginBottom: 100 }}>
-            <MainContainer>
+            <MainContainer containerStyle={{ marginBottom: 0 }}>
+              <CalorieScoreSection
+                username={username}
+                calorieScore={calorieScore}
+                tier={tier}
+                remainedCal={remainedCal}
+                recommendCal={recommendCal}
+                isSimple={true}
+              />
+            </MainContainer>
+            <MainContainer containerStyle={{ marginBottom: 0 }}>
               {todayPost && (
                 <CaloriePostHeader
+                  totalSpendKcal={totalSpendKcal}
                   totalEarnKcal={totalEarnKcal}
                   today={dateToMmDd(formatDate)}
                 />
               )}
             </MainContainer>
-            <MainContainer>
+            <MainContainer containerStyle={{ marginBottom: 0 }}>
               <CaloriePostDetail caloriePostData={todayPost} />
             </MainContainer>
           </BottomSheetScrollView>
