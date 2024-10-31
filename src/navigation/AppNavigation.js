@@ -27,6 +27,8 @@ import PhotoScreen from '../screens/cameraStack/PhotoScreen';
 import { getAccessToken } from '../utils/jwt/tokenUtils';
 import ExerciseScreen from '../screens/homeStack/ExerciseScreen';
 import FoodScreen from '../screens/homeStack/FoodScreen';
+import MonthTierReportScreen from '../screens/homeStack/MonthTierReportScreen';
+import CalorieScoreScreen from '../screens/homeStack/CalorieScoreScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,6 +46,8 @@ const HomeStackNavigator = () => {
       <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Exercise" component={ExerciseScreen} />
       <Stack.Screen name="Food" component={FoodScreen} />
+      <Stack.Screen name="TierReport" component={MonthTierReportScreen} />
+      <Stack.Screen name="CalorieScore" component={CalorieScoreScreen} />
     </Stack.Navigator>
   );
 };

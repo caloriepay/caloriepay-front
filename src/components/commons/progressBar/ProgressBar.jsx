@@ -26,9 +26,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
-    marginBottom: 9,
+    marginVertical: 9,
   },
   usedCalorieText: {
     fontSize: 25,
