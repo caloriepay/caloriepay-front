@@ -23,19 +23,22 @@ export default function CaloriePostDetail({ caloriePostData }) {
           onPress={() => setActiveTab('earn')}
         />
       </View>
-      {activeTab === 'spend' && caloriePostData?.spend?.length > 0 ? (
-        caloriePostData.spend.map((spendItem, index) => (
-          <View key={`spend-${index}`} style={styles.postContainer}>
-            <Text style={styles.postTitle}>식사 기록</Text>
-            {spendItem.data.map((food, idx) => (
-              <View key={`food-${idx}`} style={styles.foodItem}>
-                <Text>
-                  {food.foodName} - {food.foodKcal} kcal
-                </Text>
-              </View>
-            ))}
-          </View>
-        ))
+      {activeTab === 'spend' && caloriePostData?.mealRecords?.length > 0 ? (
+        // caloriePostData.spend.map((spendItem, index) => (
+        //   <View key={`spend-${index}`} style={styles.postContainer}>
+        //     <Text style={styles.postTitle}>식사 기록</Text>
+        //     {spendItem.data.map((food, idx) => (
+        //       <View key={`food-${idx}`} style={styles.foodItem}>
+        //         <Text>
+        //           {food.foodName} - {food.foodKcal} kcal
+        //         </Text>
+        //       </View>
+        //     ))}
+        //   </View>
+        // ))
+        <>
+          <Receipt postData={caloriePostData.mealRecords} isMeal={true} />
+        </>
       ) : activeTab === 'spend' ? (
         <View style={styles.nullContainer}>
           <Text style={styles.nullTitle}>이용내역이 없습니다.</Text>
@@ -44,7 +47,7 @@ export default function CaloriePostDetail({ caloriePostData }) {
 
       {activeTab === 'earn' && caloriePostData?.exerciseRecords?.length > 0 ? (
         <View>
-          <Receipt postData={caloriePostData} />
+          <Receipt postData={caloriePostData.exerciseRecords} />
         </View>
       ) : activeTab === 'earn' ? (
         <View style={styles.nullContainer}>

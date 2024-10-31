@@ -1,7 +1,7 @@
 import MainWrapper from '../../components/commons/layout/wrapper/MainWrapper';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { BottomModalHeader } from '../../components/units/BottomModalHeader';
 import { calculatePercentage } from '../../utils/calculatePercentage';
 import MainContainer from '../../components/commons/layout/container/MainContainer';
@@ -121,17 +121,19 @@ export default function HomeScreen() {
           enablePanDownToClose={false}
           handleComponent={() => BottomModalHeader(isModalOpen)}
         >
-          <MainContainer>
-            {todayPost && (
-              <CaloriePostHeader
-                totalEarnKcal={totalEarnKcal}
-                today={dateToMmDd(formatDate)}
-              />
-            )}
-          </MainContainer>
-          <MainContainer>
-            <CaloriePostDetail caloriePostData={todayPost} />
-          </MainContainer>
+          <BottomSheetScrollView style={{ marginBottom: 100 }}>
+            <MainContainer>
+              {todayPost && (
+                <CaloriePostHeader
+                  totalEarnKcal={totalEarnKcal}
+                  today={dateToMmDd(formatDate)}
+                />
+              )}
+            </MainContainer>
+            <MainContainer>
+              <CaloriePostDetail caloriePostData={todayPost} />
+            </MainContainer>
+          </BottomSheetScrollView>
         </BottomSheetModal>
       </MainWrapper>
     </>
