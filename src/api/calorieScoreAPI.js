@@ -7,7 +7,8 @@ const BASE_URL = `http://${manifest2.extra.expoClient.hostUri.split(':')[0]}:808
 export const getCalorieAndScore = async () => {
   try {
     const response = await apiClient.get(`${BASE_URL}/api/kcal`);
-
+    console.log('calorieScore response data');
+    console.log(JSON.stringify(response.data, null, 2));
     const defaultData = {
       calorieScore: {
         name: 'Unknown',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MainWrapper from '../../components/commons/layout/wrapper/MainWrapper';
 import MainContainer from '../../components/commons/layout/container/MainContainer';
@@ -8,24 +8,49 @@ import {
 } from 'react-native-responsive-screen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import Graph from '../../components/commons/graph/Graph';
+import { getUserInfo, getUserWeightRecords } from '../../api/userApi';
+import CommonHeader from '../../components/commons/layout/header/CommonHeader';
+import { globalStyles } from '../../styles/globalStyles';
+
 export default function MyDataScreen() {
+  const [data, setData] = useState();
+  const [username, setUsername] = useState();
+  const [goal, setGoal] = useState();
+  const [weight, setWeight] = useState();
+  const [targetWeight, setTargetWeight] = useState();
+
+  const fetchScoreData = async () => {
+    const userInfo = await getUserInfo();
+    const weightRecords = await getUserWeightRecords();
+    setData(weightRecords);
+    setUsername(userInfo?.name);
+    setWeight(userInfo?.profile?.weight);
+    setTargetWeight(userInfo?.profile?.targetWeight);
+    setGoal(userInfo?.profile?.goal);
+  };
+  useEffect(() => {
+    fetchScoreData();
+  }, []);
   return (
     <MainWrapper>
       <View style={styles.userNameContainer}>
-        <Text style={styles.userNames}>정채원님</Text>
+        <Text style={styles.userNames}>{username} 님</Text>
       </View>
 
-      <MainContainer>
+      <MainContainer containerStyle={{ marginBottom: 5 }}>
         <View style={styles.goalContainer}>
           <Text style={styles.leftText}>나의 목표</Text>
-          <Text style={styles.rightText}>다이어트</Text>
+          <Text style={styles.rightText}>
+            {goal === 'DIET' ? '다이어트' : '유지어트'}
+          </Text>
           <TouchableOpacity>
             <Text style={styles.editButton}>수정</Text>
           </TouchableOpacity>
         </View>
       </MainContainer>
 
-      <MainContainer>
+      <MainContainer containerStyle={{ marginBottom: 5 }}>
         <View>
           <View style={styles.goalContainer}>
             <Text style={styles.leftText}>현재 체중</Text>
@@ -34,19 +59,27 @@ export default function MyDataScreen() {
               <Text style={styles.editButton}>수정</Text>
             </TouchableOpacity>
           </View>
-
           <View style={styles.divider} />
-
           <View style={styles.weightContainer}>
             <View style={styles.weightColumn}>
-              <Text style={styles.weightValue}>63.0kg</Text>
+              <Text style={styles.weightValue}>{weight}kg</Text>
             </View>
             <View style={styles.weightColumn}>
-              <Text style={styles.weightValue}>61.5kg</Text>
+              <Text style={styles.weightValue}>{targetWeight}kg</Text>
             </View>
             <View style={styles.spacer} />
           </View>
         </View>
+      </MainContainer>
+      <MainContainer>
+        <CommonHeader leftText="체중 변화" />
+        {data ? (
+          <Graph data={data} />
+        ) : (
+          <View style={styles.loadingContainer}>
+            <Text style={styles.loadingText}>Loading...</Text>
+          </View>
+        )}
       </MainContainer>
     </MainWrapper>
   );
@@ -63,7 +96,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(5),
   },
   userNames: {
-    fontSize: 28,
+    fontSize: 20,
     fontWeight: 'bold',
     color: 'white',
   },
@@ -78,17 +111,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
   },
   leftText: {
-    fontSize: 25,
+    fontSize: 20,
     color: 'black',
     fontWeight: 'bold',
   },
   rightText: {
-    fontSize: 25,
+    fontSize: 20,
     color: 'black',
     fontWeight: 'bold',
   },
   targetWeight: {
-    fontSize: 25,
+    fontSize: 20,
     color: 'red',
     fontWeight: 'bold',
   },
@@ -113,7 +146,7 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   weightValue: {
-    fontSize: 35,
+    fontSize: 30,
     fontWeight: 'bold',
     color: 'black',
   },
@@ -125,5 +158,16 @@ const styles = StyleSheet.create({
   },
   spacer: {
     flex: 0.3,
+  },
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 200,
+    width: 330,
+  },
+  loadingText: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: globalStyles.gray,
   },
 });

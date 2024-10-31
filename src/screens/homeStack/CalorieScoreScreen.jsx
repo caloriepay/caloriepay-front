@@ -11,23 +11,12 @@ import { globalStyles } from '../../styles/globalStyles';
 export default function CalorieScoreScreen() {
   const [data, setData] = useState();
   const fetchScoreData = async () => {
-    // api 요청
     const response = await getCalorieScoreRecords();
     setData(response);
   };
   useEffect(() => {
     fetchScoreData();
   }, []);
-  // const data = {
-  //   labels: ['11.09', '11.16', '11.23', '11.30', '12.7', '12.14'],
-  //   datasets: [
-  //     {
-  //       data: [64.5, 64, 64, 63.6, 63, 65],
-  //       // strokeWidth: 4, // optional
-  //     },
-  //   ],
-  //   legend: ['체중 변화'], // optional
-  // };
   console.log('calorieScoreScreen');
   console.log(JSON.stringify(data, null, 2));
 
