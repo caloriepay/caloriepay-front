@@ -4,7 +4,11 @@ import UseEarnTabButton from '../buttons/UseEarnTabButton';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
 import Receipt from '../layout/receipt/Receipt';
 
-export default function CaloriePostDetail({ caloriePostData }) {
+export default function CaloriePostDetail({
+  caloriePostData,
+  totalEarnKcal,
+  totalSpendKcal,
+}) {
   const [activeTab, setActiveTab] = useState('spend');
   return (
     <>
@@ -24,20 +28,13 @@ export default function CaloriePostDetail({ caloriePostData }) {
         />
       </View>
       {activeTab === 'spend' && caloriePostData?.mealRecords?.length > 0 ? (
-        // caloriePostData.spend.map((spendItem, index) => (
-        //   <View key={`spend-${index}`} style={styles.postContainer}>
-        //     <Text style={styles.postTitle}>식사 기록</Text>
-        //     {spendItem.data.map((food, idx) => (
-        //       <View key={`food-${idx}`} style={styles.foodItem}>
-        //         <Text>
-        //           {food.foodName} - {food.foodKcal} kcal
-        //         </Text>
-        //       </View>
-        //     ))}
-        //   </View>
-        // ))
         <>
-          <Receipt postData={caloriePostData.mealRecords} isMeal={true} />
+          <Receipt
+            postData={caloriePostData.mealRecords}
+            isMeal={true}
+            totalEarnKcal={totalEarnKcal}
+            totalSpendKcal={totalSpendKcal}
+          />
         </>
       ) : activeTab === 'spend' ? (
         <View style={styles.nullContainer}>
@@ -47,7 +44,11 @@ export default function CaloriePostDetail({ caloriePostData }) {
 
       {activeTab === 'earn' && caloriePostData?.exerciseRecords?.length > 0 ? (
         <View>
-          <Receipt postData={caloriePostData.exerciseRecords} />
+          <Receipt
+            postData={caloriePostData.exerciseRecords}
+            totalEarnKcal={totalEarnKcal}
+            totalSpendKcal={totalSpendKcal}
+          />
         </View>
       ) : activeTab === 'earn' ? (
         <View style={styles.nullContainer}>

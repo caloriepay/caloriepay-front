@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MainWrapper from '../../components/commons/layout/wrapper/MainWrapper';
 import MainContainer from '../../components/commons/layout/container/MainContainer';
@@ -12,6 +12,7 @@ import Graph from '../../components/commons/graph/Graph';
 import { getUserInfo, getUserWeightRecords } from '../../api/userApi';
 import CommonHeader from '../../components/commons/layout/header/CommonHeader';
 import { globalStyles } from '../../styles/globalStyles';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function MyDataScreen() {
   const [data, setData] = useState();
@@ -32,6 +33,11 @@ export default function MyDataScreen() {
   useEffect(() => {
     fetchScoreData();
   }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchScoreData();
+    }, []),
+  );
   return (
     <MainWrapper>
       <View style={styles.userNameContainer}>
@@ -87,13 +93,14 @@ export default function MyDataScreen() {
 
 const styles = StyleSheet.create({
   userNameContainer: {
-    backgroundColor: '#18C07A',
+    backgroundColor: globalStyles.mainColor,
     paddingVertical: hp(2),
     paddingHorizontal: wp(7),
     borderRadius: 20,
     alignItems: 'flex-start',
     marginVertical: hp(1),
     marginHorizontal: wp(5),
+    marginBottom: 0,
   },
   userNames: {
     fontSize: 20,

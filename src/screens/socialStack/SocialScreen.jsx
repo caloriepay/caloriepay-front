@@ -1,11 +1,12 @@
 import MainWrapper from '../../components/commons/layout/wrapper/MainWrapper';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import MainContainer from '../../components/commons/layout/container/MainContainer';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   getCalorieScoreRank,
   getCalorieScoreTotalRank,
 } from '../../api/calorieScoreAPI';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function SocialScreen() {
   const [userRankData, setUserRankData] = useState();
@@ -21,6 +22,11 @@ export default function SocialScreen() {
   useEffect(() => {
     fetchRankData();
   }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchRankData();
+    }, []),
+  );
 
   const getRankColor = (rank) => {
     if (rank === 1) return styles.firstPlace;
@@ -41,7 +47,12 @@ export default function SocialScreen() {
         </View>
         <View style={styles.headerRow}></View>
         <View style={styles.subtitleWrapper}>
-          <Text style={styles.myRankTitle}>{userRankData?.rank}위</Text>
+          <View>
+            <Text style={styles.myRankTitle}>{userRankData?.rank}위</Text>
+            <Text style={{ color: 'gray' }}>
+              (상위{userRankData?.perRank}%)
+            </Text>
+          </View>
           <Text style={styles.subtitleText}>{userRankData?.score}점</Text>
         </View>
       </MainContainer>

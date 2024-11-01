@@ -6,6 +6,7 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import MainWrapper from '../../components/commons/layout/wrapper/MainWrapper';
 import MainContainer from '../../components/commons/layout/container/MainContainer';
@@ -40,8 +41,15 @@ export default function SeeMoreScreen() {
     try {
       const result = await editUserInfo(editedData);
       if (result.success) {
-        setUserData(editedData);
-        setModalVisible(false);
+        Alert.alert('회원정보 수정', '회원정보 수정이 완료되었습니다.', [
+          {
+            text: '확인',
+            onPress: () => {
+              setUserData(editedData);
+              setModalVisible(false);
+            },
+          },
+        ]);
       } else {
         console.error('사용자 정보 수정 실패:', result.message);
         alert(`수정 실패: ${result.message}`);
@@ -50,12 +58,14 @@ export default function SeeMoreScreen() {
       console.error('Failed to update user data:', error);
     }
   };
-  console.log('수정');
-  console.log(JSON.stringify(editedData, null, 2));
   return (
     <MainWrapper>
       <MainContainer>
-        <CommonHeader leftText="사용자 정보" rightText="수정" />
+        <CommonHeader
+          leftText="사용자 정보"
+          rightText="수정"
+          onPress={() => setModalVisible(true)}
+        />
         {userData ? (
           <View style={styles.formWrapper}>
             <View style={styles.contentWrapper}>
@@ -122,8 +132,27 @@ export default function SeeMoreScreen() {
           <Text>Loading...</Text>
         )}
       </MainContainer>
-      <CustomButton onPress={() => logOut()} title="로그아웃" />
-      <CustomButton onPress={() => setModalVisible(true)} title="모달" />
+      <CustomButton
+        onPress={() => {
+          Alert.alert(
+            '로그아웃',
+            '로그아웃 하시겠습니까?',
+            [
+              {
+                text: '취소',
+                onPress: () => console.log('로그아웃 취소됨'),
+                style: 'cancel',
+              },
+              {
+                text: '로그아웃',
+                onPress: () => logOut(),
+              },
+            ],
+            { cancelable: true },
+          );
+        }}
+        title="로그아웃"
+      />
       <Modal visible={isModalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -143,7 +172,7 @@ export default function SeeMoreScreen() {
               <Text>성별</Text>
               <TextInput
                 style={[styles.input, styles.disabledInput]}
-                value={editedData.profile?.gender}
+                value={editedData.profile?.gender === 'MALE' ? '남성' : '여성'}
                 editable={false}
                 onChangeText={(text) =>
                   setEditedData({ ...editedData, name: text })
