@@ -1,18 +1,16 @@
-import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native';
 import { StyleSheet, View, Text } from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-export default function CommonHeader({ leftText, rightText }) {
-  const navigation = useNavigation();
+export default function CommonHeader({ leftText, rightText, onPress }) {
   return (
     <View style={styles.container}>
       <Text style={styles.leftText}>{leftText}</Text>
 
       {rightText ? (
-        <TouchableOpacity onPress={navigation.Edit}>
+        <TouchableOpacity onPress={onPress}>
           <Text style={styles.rightText}>{rightText}</Text>
         </TouchableOpacity>
       ) : (

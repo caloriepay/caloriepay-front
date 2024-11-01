@@ -7,11 +7,13 @@ import { useState } from 'react';
 import { Button } from '@rneui/base';
 import { getMonthTier, getMonthTierAmount } from '../../api/tierAPI';
 import { useEffect } from 'react';
+import { getHighestScoreInMonth } from '../../api/calorieScoreAPI';
 
 export default function MonthReport({ calorieScore }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [tier, setTier] = useState();
   const [tierCount, setTierCount] = useState({ S: 0, A: 0, B: 0, C: 0, D: 0 });
+  const [monthScore, setMonthScore] = useState();
 
   const year = getYear(selectedDate);
   const month = getMonth(selectedDate) + 1;
@@ -27,6 +29,8 @@ export default function MonthReport({ calorieScore }) {
     const year = getYear(date);
     const month = getMonth(date) + 1;
     const monthTierData = await getMonthTier(year, month);
+    const monthScoreData = await getHighestScoreInMonth(year, month);
+    setMonthScore(monthScoreData);
     setTier(monthTierData?.tier);
     const response = await getMonthTierAmount(year, month);
     const tierAmounts = { S: 0, A: 0, B: 0, C: 0, D: 0 };
@@ -80,7 +84,7 @@ export default function MonthReport({ calorieScore }) {
         hasShadow={false}
       >
         <Text style={styles.calorieScoreStyle}>
-          {month}월 최고 Calorie Score | {calorieScore}점
+          {month}월 최고 Calorie Score | {monthScore || ' - '}점
         </Text>
       </MainContainer>
 

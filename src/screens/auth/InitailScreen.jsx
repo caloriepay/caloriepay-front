@@ -13,7 +13,7 @@ import SignUpText from '../../components/commons/text/SignUpText';
 export default function InitialScreen() {
   const navigation = useNavigation();
   const { logIn } = useAuth();
-  const handleKaKaoLogin = () => logIn();
+  // const handleKaKaoLogin = () => logIn();
   const handleEmailLogin = () => navigation.navigate('login');
 
   return (
@@ -28,21 +28,6 @@ export default function InitialScreen() {
         <Title />
       </View>
       <View style={styles.buttonContainer}>
-        <CustomButton
-          title="카카오 로그인"
-          titleStyle={styles.kakaoText}
-          icon={{
-            name: 'comment',
-            type: 'font-awesome',
-            size: 21,
-            color: globalStyles.kakaoIconColor,
-          }}
-          buttonStyle={{
-            backgroundColor: globalStyles.kakaoContainerColor,
-          }}
-          onPress={handleKaKaoLogin}
-          containerStyle={{ width: wp(90) }}
-        />
         <CustomButton
           title="이메일 로그인"
           icon={{

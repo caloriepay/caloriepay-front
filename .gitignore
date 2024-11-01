@@ -42,3 +42,5 @@ project/logs/
 .yarn/cache
 
 .yarn/install-state.gz
+
+src/api/config.js

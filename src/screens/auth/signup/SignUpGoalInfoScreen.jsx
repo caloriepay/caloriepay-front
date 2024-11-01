@@ -106,7 +106,6 @@ export default function SignUpGoalInfoScreen() {
             errors={errors}
             leftIcon={<Icon name="outlined-flag" size={20} color="gray" />}
           />
-          <Text>내 키의 정상 체중범위</Text>
         </View>
       </SignUpWrapper>
     </View>

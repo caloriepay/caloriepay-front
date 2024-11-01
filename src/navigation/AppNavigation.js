@@ -24,11 +24,11 @@ import { LoadingProvider } from '../context/loadingContext';
 import CalendarScreen from '../screens/homeStack/CalendarScreen';
 import CameraScreen from '../screens/cameraStack/CameraScren';
 import PhotoScreen from '../screens/cameraStack/PhotoScreen';
-import { getAccessToken } from '../utils/jwt/tokenUtils';
 import ExerciseScreen from '../screens/homeStack/ExerciseScreen';
 import FoodScreen from '../screens/homeStack/FoodScreen';
 import MonthTierReportScreen from '../screens/homeStack/MonthTierReportScreen';
 import CalorieScoreScreen from '../screens/homeStack/CalorieScoreScreen';
+import ScreenHeader from '../components/commons/layout/header/ScreenHeader';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,11 +43,31 @@ const HomeStackNavigator = () => {
           headerTitle: () => <Title />,
         }}
       />
-      <Stack.Screen name="Calendar" component={CalendarScreen} />
-      <Stack.Screen name="Exercise" component={ExerciseScreen} />
-      <Stack.Screen name="Food" component={FoodScreen} />
-      <Stack.Screen name="TierReport" component={MonthTierReportScreen} />
-      <Stack.Screen name="CalorieScore" component={CalorieScoreScreen} />
+      <Stack.Screen
+        name="Calendar"
+        component={CalendarScreen}
+        options={{ header: () => <ScreenHeader title="칼로리 소비 캘린더" /> }}
+      />
+      <Stack.Screen
+        name="Exercise"
+        component={ExerciseScreen}
+        options={{ header: () => <ScreenHeader title="적립하기" /> }}
+      />
+      <Stack.Screen
+        name="Food"
+        component={FoodScreen}
+        options={{ header: () => <ScreenHeader title="사용하기" /> }}
+      />
+      <Stack.Screen
+        name="TierReport"
+        component={MonthTierReportScreen}
+        options={{ header: () => <ScreenHeader title="월별 리포트" /> }}
+      />
+      <Stack.Screen
+        name="CalorieScore"
+        component={CalorieScoreScreen}
+        options={{ header: () => <ScreenHeader title="Calorie Score" /> }}
+      />
     </Stack.Navigator>
   );
 };

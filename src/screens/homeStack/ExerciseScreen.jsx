@@ -39,8 +39,8 @@ export default function ExerciseScreen() {
       return updatedList;
     });
   };
-  const handleSubmit = () => {
-    if (earnKcalByExercise(exerciseList)) {
+  const handleSubmit = async () => {
+    if (await earnKcalByExercise(exerciseList)) {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -63,7 +63,7 @@ export default function ExerciseScreen() {
         </View>
         <CustomInput
           title="운동 제목"
-          placeholder="2024년 10월 31일 운동!"
+          placeholder="운동 제목을 입력해 주세요."
           onChange={(text) => updateExerciseData(0, 'title', text)}
         />
         {exerciseList.map((exercise, index) => (

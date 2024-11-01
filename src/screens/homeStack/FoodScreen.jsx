@@ -3,8 +3,11 @@ import MainWrapper from '../../components/commons/layout/wrapper/MainWrapper';
 import MainContainer from '../../components/commons/layout/container/MainContainer';
 import { calculateTotalFoodKcal } from '../../utils/totalKcal';
 import CustomButton from '../../components/commons/buttons/CustomButton';
+import CommonHeader from '../../components/commons/layout/header/CommonHeader';
+import { useMoveToScreen } from '../../components/commons/hooks/useMoveToScreen';
 
 export default function FoodScreen({ route }) {
+  const { onPressGoBack } = useMoveToScreen();
   const { response, photoUri } = route.params;
   const formatTo12Hour = (hour, minute) => {
     const period = hour >= 12 ? '오후' : '오전';
@@ -16,11 +19,12 @@ export default function FoodScreen({ route }) {
     response.mealTime[3],
     response.mealTime[4],
   );
+  console.log(response);
   const totalCalories = calculateTotalFoodKcal(response.foods);
   return (
     <MainWrapper>
       <MainContainer>
-        <Text>{formattedTime}</Text>
+        <CommonHeader leftText={formattedTime} />
         <Image
           source={{ uri: photoUri }}
           style={[styles.photo, { resizeMode: 'cover' }]}
@@ -50,7 +54,7 @@ export default function FoodScreen({ route }) {
         </View>
       </MainContainer>
       <MainContainer>
-        <Text>영양 상세 정보</Text>
+        <CommonHeader leftText="영양 상세 정보" />
         {response.foods !== undefined ? (
           response.foods.map((item, index) => (
             <View key={`foods-${index}`}>
@@ -80,7 +84,12 @@ export default function FoodScreen({ route }) {
           <View>?</View>
         )}
       </MainContainer>
-      <CustomButton title="등록하기" />
+      <CustomButton
+        title="등록하기"
+        onPress={() => {
+          onPressGoBack();
+        }}
+      />
     </MainWrapper>
   );
 }

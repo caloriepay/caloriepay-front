@@ -3,7 +3,7 @@ import Constants from 'expo-constants';
 
 const { manifest2 } = Constants;
 manifest2.extra.expoClient.hostUri;
-const BASE_URL = `http://${manifest2.extra.expoClient.hostUri.split(':')[0]}:8080`;
+const BASE_URL = `http://54.180.138.130:8080`;
 
 export const getExerciseData = async () => {
   console.log('getExerciseData');

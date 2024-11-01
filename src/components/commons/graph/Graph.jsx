@@ -1,4 +1,6 @@
+import { StyleSheet, View, Text } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { globalStyles } from '../../../styles/globalStyles';
 
 export default function Graph({ data, isWeight }) {
   const chartConfig = {
@@ -17,26 +19,47 @@ export default function Graph({ data, isWeight }) {
         ? numericValue.toFixed(1)
         : Math.round(numericValue).toString();
     },
-    // propsForDots: {
-    //   r: '6',
-    //   strokeWidth: '2',
-    //   // stroke: '#ffa726',
-    // },
   };
+  console.log('===========');
+
+  console.log(JSON.stringify(data, null, 2));
   return (
     <>
-      <LineChart
-        data={data}
-        width={330}
-        height={200}
-        yAxisSuffix={data?.legend[0] === '체중 변화' ? 'kg' : ''}
-        chartConfig={chartConfig}
-        // bezier
-        style={{
-          marginVertical: 8,
-          borderRadius: 16,
-        }}
-      />
+      {data.labels.length > 0 && data.datasets[0].data.length > 0 ? (
+        <LineChart
+          data={data}
+          width={330}
+          height={200}
+          yAxisSuffix={data?.legend[0] === '체중 변화' ? 'kg' : ''}
+          chartConfig={chartConfig}
+          // bezier
+          style={{
+            marginVertical: 8,
+          }}
+        />
+      ) : (
+        <View style={styles.nullContainer}>
+          <Text style={styles.nullText}>
+            {data?.legend[0] === '체중 변화'
+              ? '체중 변화 데이터가 없습니다.'
+              : '스코어 변화 데이터가 없습니다.'}
+          </Text>
+        </View>
+      )}
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  nullContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 330,
+    height: 200,
+  },
+  nullText: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: globalStyles.gray,
+  },
+});

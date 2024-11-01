@@ -45,7 +45,11 @@ export default function CalendarPost({
         totalSpendKcal={totalSpendKcal}
       />
       <Collapsible collapsed={isCollapsed}>
-        <CaloriePostDetail caloriePostData={selectedDatePosts} />
+        <CaloriePostDetail
+          caloriePostData={selectedDatePosts}
+          totalEarnKcal={totalEarnKcal}
+          totalSpendKcal={totalSpendKcal}
+        />
       </Collapsible>
     </>
   );

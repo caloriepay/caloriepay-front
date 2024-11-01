@@ -12,7 +12,6 @@ import { globalStyles } from '../../styles/globalStyles';
 import { View } from 'react-native';
 import { getCalorieAndScore } from '../../api/calorieScoreAPI';
 import { useLoading } from '../../context/loadingContext';
-import CustomButton from '../../components/commons/buttons/CustomButton';
 import CalorieScoreSection from '../../components/units/CalorieScoreSection';
 import { dateToMmDd } from '../../utils/date';
 import { getKcalDataByDate } from '../../api/calendarAPI';
@@ -23,7 +22,6 @@ import {
 import CaloriePostHeader from '../../components/commons/caloriePost/CaloriePostHeader';
 import CaloriePostDetail from '../../components/commons/caloriePost/CaloriePostDetail';
 
-import MonthReport from '../../components/units/MonthReport';
 import { getMonthTier } from '../../api/tierAPI';
 
 export default function HomeScreen() {

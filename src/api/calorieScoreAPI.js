@@ -2,7 +2,7 @@ import apiClient from './apiInterceptor';
 import Constants from 'expo-constants';
 
 const { manifest2 } = Constants;
-const BASE_URL = `http://${manifest2.extra.expoClient.hostUri.split(':')[0]}:8080`;
+const BASE_URL = `http://54.180.138.130:8080`;
 
 export const getCalorieAndScore = async () => {
   try {
@@ -55,71 +55,38 @@ export const getCalorieAndScore = async () => {
 
 export const getCalorieScoreRecords = async () => {
   try {
-    // const response = await apiClient.get(`${BASE_URL}/api/kcal/change`);
-    // console.log(JSON.stringify(response.data, null, 2));
-    // return response.data.data;
-    const fakeResponse = await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          status: 'OK',
-          data: [
-            {
-              id: 30,
-              userId: 2,
-              name: '지웅',
-              date: [2024, 10, 29],
-              score: 500,
-            },
-            {
-              id: 32,
-              userId: 2,
-              name: '지웅',
-              date: [2024, 9, 28],
-              score: 200,
-            },
-            {
-              id: 35,
-              userId: 2,
-              name: '지웅',
-              date: [2024, 8, 28],
-              score: 190,
-            },
-            {
-              id: 33,
-              userId: 2,
-              name: '지웅',
-              date: [2024, 7, 28],
-              score: 20,
-            },
-            {
-              id: 34,
-              userId: 2,
-              name: '지웅',
-              date: [2024, 6, 28],
-              score: 0,
-            },
-          ],
-          message: 'SUCCESS',
-        });
-      }, 500);
+    const response = await apiClient.get(`${BASE_URL}/api/kcal/change`, {
+      params: { offset: 5 },
     });
+    console.log(JSON.stringify(response.data, null, 2));
+    const validData = response?.data?.data.filter((item) => item !== null);
+    console.log(JSON.stringify(validData, null, 2));
     const data = {
-      labels: fakeResponse?.data.map(
+      labels: validData.map(
         (item) =>
           `${String(item.date[1]).padStart(2, '0')}.${String(item.date[2]).padStart(2, '0')}`,
       ),
       datasets: [
         {
-          data: fakeResponse?.data.map((item) => item.score),
-          // strokeWidth: 4, // optional
+          data: validData.map((item) => item.score),
         },
       ],
-      legend: ['스코어 변화'], // optional
+      legend: ['스코어 변화'],
     };
-    console.log(JSON.stringify(data, null, 2));
+    const combinedData = data.labels.map((label, index) => ({
+      label: label,
+      value: data.datasets[0].data[index],
+    }));
 
-    // console.log(JSON.stringify(fakeResponse, null, 2));
-    // return fakeResponse.data;
+    combinedData.sort((a, b) => {
+      const monthA = parseInt(a.label.split('.')[0], 10);
+      const monthB = parseInt(b.label.split('.')[0], 10);
+      return monthA - monthB;
+    });
+
+    data.labels = combinedData.map((item) => item.label);
+    data.datasets[0].data = combinedData.map((item) => item.value);
+    console.log(JSON.stringify(data, null, 2));
     return data;
   } catch (error) {
     console.log(error);
@@ -145,101 +112,23 @@ export const getCalorieScoreRank = async () => {
 export const getCalorieScoreTotalRank = async () => {
   try {
     const response = await apiClient.get(`${BASE_URL}/api/kcal/rank`);
-    console.log(JSON.stringify(response.data, null, 2));
-    // return [
-    //   {
-    //     id: 1,
-    //     userId: 1,
-    //     name: '홍길동',
-    //     date: [2024, 10, 30],
-    //     score: 300,
-    //     rank: 1,
-    //     perRank: null,
-    //   },
-    //   {
-    //     id: 2,
-    //     userId: 2,
-    //     name: '이순신',
-    //     date: [2024, 10, 31],
-    //     score: 280,
-    //     rank: 2,
-    //     perRank: null,
-    //   },
-    //   {
-    //     id: 3,
-    //     userId: 3,
-    //     name: '강감찬',
-    //     date: [2024, 10, 31],
-    //     score: 260,
-    //     rank: 3,
-    //     perRank: null,
-    //   },
-    //   {
-    //     id: 4,
-    //     userId: 4,
-    //     name: '을지문덕',
-    //     date: [2024, 10, 31],
-    //     score: 240,
-    //     rank: 4,
-    //     perRank: null,
-    //   },
-    //   {
-    //     id: 5,
-    //     userId: 5,
-    //     name: '세종대왕',
-    //     date: [2024, 10, 31],
-    //     score: 220,
-    //     rank: 5,
-    //     perRank: null,
-    //   },
-    //   {
-    //     id: 6,
-    //     userId: 6,
-    //     name: '김유신',
-    //     date: [2024, 10, 31],
-    //     score: 200,
-    //     rank: 6,
-    //     perRank: null,
-    //   },
-    //   {
-    //     id: 7,
-    //     userId: 7,
-    //     name: '신사임당',
-    //     date: [2024, 10, 31],
-    //     score: 180,
-    //     rank: 7,
-    //     perRank: null,
-    //   },
-    //   {
-    //     id: 8,
-    //     userId: 8,
-    //     name: '장영실',
-    //     date: [2024, 10, 31],
-    //     score: 160,
-    //     rank: 8,
-    //     perRank: null,
-    //   },
-    //   {
-    //     id: 9,
-    //     userId: 9,
-    //     name: '유관순',
-    //     date: [2024, 10, 31],
-    //     score: 140,
-    //     rank: 9,
-    //     perRank: null,
-    //   },
-    //   {
-    //     id: 10,
-    //     userId: 10,
-    //     name: '이방원',
-    //     date: [2024, 10, 31],
-    //     score: 120,
-    //     rank: 10,
-    //     perRank: null,
-    //   },
-    // ];
     return response.data.data;
   } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getHighestScoreInMonth = async (year, month) => {
+  console.log(`getHighest : ${year}/${month}`);
+  try {
+    const response = await apiClient.get(`${BASE_URL}/api/kcal/month`, {
+      params: {
+        date: `${year}-${month}-01`,
+      },
+    });
+    return response?.data?.data?.score || ' - ';
+  } catch (error) {
+    console.log('여긴가');
     console.log(error);
   }
 };

@@ -1,10 +1,7 @@
 import axios from 'axios';
 import { saveTokens } from '../utils/jwt/tokenUtils';
 import apiClient from './apiInterceptor';
-import Constants from 'expo-constants';
-
-const { manifest2 } = Constants;
-const BASE_URL = `http://${manifest2.extra.expoClient.hostUri.split(':')[0]}:8080`;
+import { BASE_URL } from './config';
 
 export const loginUser = async (userData) => {
   try {
@@ -97,11 +94,22 @@ export const getUserInfo = async () => {
 };
 
 export const editUserInfo = async (data) => {
-  console.log('editUserInfo');
-  console.log(JSON.stringify(data, null, 2));
+  const transformedData = {
+    email: data.email,
+    nickname: data.nickname,
+    phoneNumber: data.phoneNumber,
+    age: String(data.profile.age),
+    height: String(data.profile.height),
+    weight: String(data.profile.weight),
+    targetWeight: String(data.profile.targetWeight),
+    gender: data.profile.gender.toUpperCase(),
+    goal: data.profile.goal.toUpperCase(),
+  };
   try {
-    const response = await apiClient.patch(`${BASE_URL}/api/members`, data);
-    console.log(JSON.stringify(response.data, null, 2));
+    const response = await apiClient.patch(
+      `${BASE_URL}/api/members`,
+      transformedData,
+    );
     return { success: true, data: response.data };
   } catch (error) {
     if (error.response) {
@@ -118,57 +126,40 @@ export const editUserInfo = async (data) => {
 
 export const getUserWeightRecords = async () => {
   try {
-    // const response = await apiClient.get(`${BASE_URL}/api/members/weight`);
-    // console.log(JSON.stringify(response.data, null, 2));
-    const fakeResponse = await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          status: 'OK',
-          data: [
-            {
-              memberId: 1,
-              weight: 89.0,
-              date: [2024, 10, 31],
-            },
-            {
-              memberId: 1,
-              weight: 65.0,
-              date: [2023, 10, 15],
-            },
-            {
-              memberId: 1,
-              weight: 68.0,
-              date: [2023, 10, 8],
-            },
-            {
-              memberId: 1,
-              weight: 70.5,
-              date: [2023, 10, 1],
-            },
-            {
-              memberId: 1,
-              weight: 70.5,
-              date: [2023, 9, 1],
-            },
-          ],
-          message: 'SUCCESS',
-        });
-      }, 500);
-    });
+    const response = await apiClient.get(`${BASE_URL}/api/members/weight`);
+    console.log(JSON.stringify(response.data, null, 2));
     const data = {
-      labels: fakeResponse?.data.map(
+      labels: response?.data?.data.map(
         (item) =>
           `${String(item.date[1]).padStart(2, '0')}.${String(item.date[2]).padStart(2, '0')}`,
       ),
       datasets: [
         {
-          data: fakeResponse?.data.map((item) => item.weight),
-          // strokeWidth: 4, // optional
+          data: response?.data?.data.map((item) => item.weight),
         },
       ],
-      legend: ['스코어 변화'], // optional
+      legend: ['체중 변화'],
     };
-    console.log(JSON.stringify(data, null, 2));
+    const combinedData = data.labels.map((label, index) => ({
+      label: label,
+      value: data.datasets[0].data[index],
+    }));
+
+    // Sort combined data by month and day
+    combinedData.sort((a, b) => {
+      const [monthA, dayA] = a.label.split('.').map(Number);
+      const [monthB, dayB] = b.label.split('.').map(Number);
+
+      if (monthA !== monthB) {
+        return monthA - monthB; // Sort by month
+      } else {
+        return dayA - dayB; // Sort by day if months are equal
+      }
+    });
+
+    // Separate sorted labels and data
+    data.labels = combinedData.map((item) => item.label);
+    data.datasets[0].data = combinedData.map((item) => item.value);
     return data;
   } catch (error) {
     console.log(error);

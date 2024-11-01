@@ -1,10 +1,15 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { globalStyles } from '../../../../styles/globalStyles';
 import { calculateTotalEarnKcal } from '../../../../utils/totalKcal';
 
-export default function Receipt({ postData, isMeal = false }) {
+export default function Receipt({
+  postData,
+  isMeal = false,
+  totalEarnKcal,
+  totalSpendKcal,
+}) {
   const totalCaloriesBurned = calculateTotalEarnKcal(postData.exerciseRecords);
-
+  console.log(`totalEarnKcal : ${totalEarnKcal}`);
   const formatTo12Hour = (hour, minute) => {
     const period = hour >= 12 ? '오후' : '오전';
     const adjustedHour = hour % 12 || 12;
@@ -21,6 +26,12 @@ export default function Receipt({ postData, isMeal = false }) {
               <Text style={styles.timeText}>
                 {formatTo12Hour(item?.mealTime[3], item?.mealTime[4])}
               </Text>
+              <View style={styles.photoWrapper}>
+                <Image
+                  source={{ uri: item?.mealImgUrl }}
+                  style={styles.photo}
+                />
+              </View>
               {item.foods.map((food, idx) => (
                 <View key={`food-${idx}`} style={styles.itemWrapper}>
                   <Text style={styles.itemTitle}>{food.foodName}</Text>
@@ -62,7 +73,8 @@ export default function Receipt({ postData, isMeal = false }) {
           }}
         >
           <Text style={styles.itemTitle}>총합</Text>
-          <Text style={styles.totalKcal}>{totalCaloriesBurned} kcal</Text>
+          {/* <Text style={styles.totalKcal}>{totalCaloriesBurned} kcal</Text> */}
+          <Text style={styles.totalKcal}>{totalEarnKcal} kcal</Text>
         </View>
       )}
     </View>
@@ -70,6 +82,15 @@ export default function Receipt({ postData, isMeal = false }) {
 }
 
 const styles = StyleSheet.create({
+  photoWrapper: {
+    alignItems: 'center',
+  },
+  photo: {
+    width: 200,
+    height: 200,
+    borderRadius: 15,
+    marginBottom: 30,
+  },
   receiptContainer: {
     marginTop: 10,
     padding: 16,

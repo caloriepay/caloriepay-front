@@ -11,7 +11,8 @@ import Constants from 'expo-constants';
 const { manifest2 } = Constants;
 
 const apiClient = axios.create({
-  baseURL: `http://${manifest2.extra.expoClient.hostUri.split(':')[0]}:8080`,
+  // baseURL: `http://${manifest2.extra.expoClient.hostUri.split(':')[0]}:8080`,
+  baseURL: `http://54.180.138.130:8080`,
 });
 
 apiClient.interceptors.request.use(async (config) => {

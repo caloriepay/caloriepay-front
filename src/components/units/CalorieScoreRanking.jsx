@@ -54,7 +54,7 @@ export default function CalorieScoreRanking({}) {
         <Text style={styles.totalRanking}>
           오늘 확인 | 상위 {rankPercentage}%
         </Text>
-        <Text style={styles.friendRanking}>친구랭킹 {rank}위</Text>
+        <Text style={styles.friendRanking}>전체 랭킹 {rank}위</Text>
       </View>
     </MainContainer>
   );
